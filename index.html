@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StackMux</title>
+    <meta
+      name="description"
+      content="StackMux gives every git worktree its own ports, Docker stack, and isolated runtime so you can run branches in parallel."
+    >
+    <script>
+      (function() {
+        var storageKey = "stackmux-theme";
+        var root = document.documentElement;
+        var stored = null;
+
+        try {
+          stored = localStorage.getItem(storageKey);
+        } catch (error) {
+          stored = null;
+        }
+
+        var theme = stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+        root.setAttribute("data-theme", theme);
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #e8f1fb;
+        --panel: rgba(245, 251, 255, 0.78);
+        --panel-strong: #f7fbff;
+        --text: #102033;
+        --muted: #496179;
+        --line: rgba(16, 32, 51, 0.12);
+        --accent: #2563eb;
+        --accent-2: #0f766e;
+        --accent-3: #06b6d4;
+        --shadow: 0 20px 60px rgba(32, 67, 110, 0.16);
+        --radius: 22px;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        --sans: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #08111f;
+          --panel: rgba(13, 24, 40, 0.8);
+          --panel-strong: #0f1b2d;
+          --text: #e7f1ff;
+          --muted: #9bb1c9;
+          --line: rgba(162, 193, 226, 0.14);
+          --accent: #60a5fa;
+          --accent-2: #5eead4;
+          --accent-3: #22d3ee;
+          --shadow: 0 20px 60px rgba(0, 0, 0, 0.36);
+        }
+      }
+
+      :root[data-theme="light"] {
+        --bg: #e8f1fb;
+        --panel: rgba(245, 251, 255, 0.78);
+        --panel-strong: #f7fbff;
+        --text: #102033;
+        --muted: #496179;
+        --line: rgba(16, 32, 51, 0.12);
+        --accent: #2563eb;
+        --accent-2: #0f766e;
+        --accent-3: #06b6d4;
+        --shadow: 0 20px 60px rgba(32, 67, 110, 0.16);
+      }
+
+      :root[data-theme="dark"] {
+        --bg: #08111f;
+        --panel: rgba(13, 24, 40, 0.8);
+        --panel-strong: #0f1b2d;
+        --text: #e7f1ff;
+        --muted: #9bb1c9;
+        --line: rgba(162, 193, 226, 0.14);
+        --accent: #60a5fa;
+        --accent-2: #5eead4;
+        --accent-3: #22d3ee;
+        --shadow: 0 20px 60px rgba(0, 0, 0, 0.36);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--sans);
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(96, 165, 250, 0.28), transparent 32%),
+          radial-gradient(circle at top right, rgba(34, 211, 238, 0.18), transparent 26%),
+          linear-gradient(180deg, #f2f8ff 0%, var(--bg) 100%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(18px);
+        background: rgba(232, 241, 251, 0.78);
+        border-bottom: 1px solid rgba(16, 32, 51, 0.08);
+      }
+
+      .site-header .shell {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 0;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.86rem;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        color: #eff6ff;
+        background: linear-gradient(135deg, var(--accent), var(--accent-3));
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
+        font-family: var(--mono);
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        padding: 2px;
+        border-radius: 999px;
+        border: 1px solid rgba(16, 32, 51, 0.08);
+        background: rgba(255, 255, 255, 0.18);
+        opacity: 0.82;
+      }
+
+      .theme-toggle button {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        font: inherit;
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: background-color 140ms ease, color 140ms ease, opacity 140ms ease;
+      }
+
+      .theme-toggle button[aria-pressed="true"] {
+        background: rgba(37, 99, 235, 0.14);
+        color: var(--text);
+      }
+
+      .theme-icon {
+        width: 14px;
+        height: 14px;
+        display: block;
+      }
+
+      .theme-toggle button:hover {
+        background: rgba(37, 99, 235, 0.08);
+        color: var(--text);
+      }
+
+      main {
+        padding: 34px 0 72px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 28px;
+        align-items: stretch;
+        padding: 42px 0 34px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-copy {
+        padding: 38px;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(15, 118, 110, 0.1);
+        color: var(--accent-2);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 6vw, 5.6rem);
+        line-height: 0.94;
+        margin-top: 18px;
+        letter-spacing: -0.05em;
+      }
+
+      .hero-copy p {
+        margin-top: 18px;
+        max-width: 44rem;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.65;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid transparent;
+      }
+
+      .button.primary {
+        background: var(--accent);
+        color: #eff6ff;
+      }
+
+      .button.secondary {
+        background: transparent;
+        border-color: var(--line);
+      }
+
+      .hero-panel {
+        padding: 26px;
+      }
+
+      .hero-panel h2 {
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #16314f;
+      }
+
+      .hero-panel p {
+        color: #294866;
+      }
+
+      .terminal {
+        margin-top: 16px;
+        padding: 18px;
+        border-radius: 18px;
+        background: #4c6483;
+        color: #f4f8ff;
+        font-family: var(--mono);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        overflow: auto;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      }
+
+      .terminal .prompt {
+        color: #7dd3fc;
+      }
+
+      .terminal .comment {
+        color: #c2d3e8;
+      }
+
+      .slot-map {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .slot {
+        padding: 12px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.52);
+        border: 1px solid rgba(16, 32, 51, 0.1);
+      }
+
+      .slot-label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .slot-title {
+        display: block;
+        color: var(--text);
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .slot-port {
+        display: block;
+        margin-top: 4px;
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 0.82rem;
+      }
+
+      .stat-grid,
+      .feature-grid,
+      .steps,
+      .command-grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 34px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+      }
+
+      .stat {
+        padding: 2px 18px 0 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.5;
+        position: relative;
+      }
+
+      .stat:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 0.2rem;
+        right: 0;
+        width: 1px;
+        height: 2.5rem;
+        background: var(--line);
+      }
+
+      .stat strong {
+        display: block;
+        margin: 0 0 6px;
+        font-size: 1rem;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+        color: var(--text);
+      }
+
+      .stat span {
+        display: block;
+      }
+
+      section {
+        padding-top: 28px;
+      }
+
+      .section-head {
+        margin-bottom: 18px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        letter-spacing: -0.04em;
+      }
+
+      .section-head p {
+        margin-top: 10px;
+        color: var(--muted);
+        max-width: 48rem;
+        line-height: 1.65;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .feature,
+      .step,
+      .command,
+      .note {
+        padding: 24px;
+      }
+
+      .feature h3,
+      .step h3,
+      .command h3 {
+        font-size: 1.15rem;
+        margin-bottom: 10px;
+      }
+
+      .feature p,
+      .step p,
+      .command p,
+      .note p {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .steps {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .step-number {
+        display: inline-flex;
+        width: 36px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        margin-bottom: 14px;
+        background: rgba(189, 79, 47, 0.1);
+        color: var(--accent);
+        font-family: var(--mono);
+        font-weight: 700;
+      }
+
+      .command-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.94em;
+      }
+
+      pre {
+        margin: 14px 0 0;
+        padding: 16px;
+        border-radius: 16px;
+        background: #4c6483;
+        color: #f4f8ff;
+        overflow: auto;
+      }
+
+      .note {
+        margin-top: 18px;
+        background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(34, 211, 238, 0.08));
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background:
+            radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 32%),
+            radial-gradient(circle at top right, rgba(34, 211, 238, 0.12), transparent 26%),
+            linear-gradient(180deg, #0a1424 0%, var(--bg) 100%);
+        }
+
+        .site-header {
+          background: rgba(8, 17, 31, 0.78);
+          border-bottom-color: rgba(162, 193, 226, 0.1);
+        }
+
+        .brand-mark {
+          color: #08111f;
+          box-shadow: 0 12px 24px rgba(34, 211, 238, 0.2);
+        }
+
+        .button.primary {
+          color: #08111f;
+        }
+
+        aside.hero-panel h2 {
+          color: #ffffff;
+          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
+        }
+
+        aside.hero-panel > p {
+          color: #e6eef9;
+          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+        }
+
+        .terminal,
+        pre {
+          background: #050c16;
+          color: #dce9fb;
+        }
+      }
+
+      :root[data-theme="light"] body {
+        background:
+          radial-gradient(circle at top left, rgba(96, 165, 250, 0.28), transparent 32%),
+          radial-gradient(circle at top right, rgba(34, 211, 238, 0.18), transparent 26%),
+          linear-gradient(180deg, #f2f8ff 0%, var(--bg) 100%);
+      }
+
+      :root[data-theme="dark"] body {
+        background:
+          radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 32%),
+          radial-gradient(circle at top right, rgba(34, 211, 238, 0.12), transparent 26%),
+          linear-gradient(180deg, #0a1424 0%, var(--bg) 100%);
+      }
+
+      :root[data-theme="light"] .site-header {
+        background: rgba(232, 241, 251, 0.78);
+        border-bottom-color: rgba(16, 32, 51, 0.08);
+      }
+
+      :root[data-theme="light"] .hero-panel {
+        background: var(--panel);
+        border-color: var(--line);
+        box-shadow: var(--shadow);
+      }
+
+      :root[data-theme="light"] .hero-panel h2 {
+        color: #16314f;
+      }
+
+      :root[data-theme="light"] .hero-panel p {
+        color: #294866;
+      }
+
+      :root[data-theme="light"] .terminal,
+      :root[data-theme="light"] pre {
+        background: #55606f;
+        color: #f4f8ff;
+      }
+
+      :root[data-theme="light"] .terminal .prompt {
+        color: #a5f3fc;
+      }
+
+      :root[data-theme="light"] .terminal .comment {
+        color: #d7e4f3;
+      }
+
+      :root[data-theme="dark"] .site-header {
+        background: rgba(8, 17, 31, 0.78);
+        border-bottom-color: rgba(162, 193, 226, 0.1);
+      }
+
+      :root[data-theme="dark"] .brand-mark {
+        color: #08111f;
+        box-shadow: 0 12px 24px rgba(34, 211, 238, 0.2);
+      }
+
+      :root[data-theme="dark"] .button.primary,
+      :root[data-theme="dark"] .theme-toggle button[aria-pressed="true"] {
+        color: #dce9fb;
+      }
+
+      :root[data-theme="dark"] .stat {
+        color: #b8cae0;
+      }
+
+      :root[data-theme="dark"] .stat strong {
+        color: #f4f8ff;
+      }
+
+      :root[data-theme="dark"] .stat:not(:last-child)::after {
+        background: rgba(162, 193, 226, 0.12);
+      }
+
+      :root[data-theme="dark"] .hero-panel {
+        background: var(--panel);
+        border-color: var(--line);
+        box-shadow: var(--shadow);
+      }
+
+      :root[data-theme="dark"] aside.hero-panel h2 {
+        color: #ffffff;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
+      }
+
+      :root[data-theme="dark"] aside.hero-panel > p {
+        color: #e6eef9;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+      }
+
+      :root[data-theme="dark"] .slot {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(162, 193, 226, 0.1);
+      }
+
+      :root[data-theme="dark"] .slot-label {
+        color: #9fb3ca;
+      }
+
+      :root[data-theme="dark"] .slot-title {
+        color: #f4f8ff;
+      }
+
+      :root[data-theme="dark"] .slot-port {
+        color: #8fdcf5;
+      }
+
+      :root[data-theme="dark"] .terminal,
+      :root[data-theme="dark"] pre {
+        background: #050c16;
+        color: #dce9fb;
+      }
+
+      :root[data-theme="dark"] .terminal .comment {
+        color: #8ca4be;
+      }
+
+      :root[data-theme="dark"] .theme-toggle {
+        background: rgba(15, 27, 45, 0.42);
+        border-color: rgba(162, 193, 226, 0.08);
+      }
+
+      :root[data-theme="dark"] .theme-toggle button[aria-pressed="true"] {
+        background: rgba(96, 165, 250, 0.18);
+      }
+
+      :root[data-theme="dark"] .theme-toggle button:hover {
+        background: rgba(96, 165, 250, 0.1);
+      }
+
+      footer {
+        padding: 34px 0 12px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 960px) {
+        .hero,
+        .stat-grid,
+        .feature-grid,
+        .steps,
+        .command-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .slot-map {
+          grid-template-columns: 1fr;
+        }
+
+        .stat-grid {
+          margin-top: 28px;
+          padding-top: 16px;
+        }
+
+        .stat {
+          padding-right: 0;
+        }
+
+        .stat:not(:last-child)::after {
+          display: none;
+        }
+
+        .hero-copy,
+        .hero-panel {
+          padding: 24px;
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .hero-copy,
+        .hero-panel,
+        .feature,
+        .step,
+        .command {
+          animation: rise 700ms ease both;
+        }
+
+        .hero-panel {
+          animation-delay: 80ms;
+        }
+
+        .feature:nth-child(2),
+        .step:nth-child(2),
+        .command:nth-child(2) {
+          animation-delay: 110ms;
+        }
+
+        .feature:nth-child(3),
+        .step:nth-child(3),
+        .command:nth-child(3) {
+          animation-delay: 180ms;
+        }
+
+        .step:nth-child(4) {
+          animation-delay: 240ms;
+        }
+
+        @keyframes rise {
+          from {
+            opacity: 0;
+            transform: translateY(14px);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell">
+        <a class="brand" href="#top">
+          <span class="brand-mark">sm</span>
+          <span>StackMux</span>
+        </a>
+        <nav>
+          <a href="#problem">Problem</a>
+          <a href="#features">Features</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#demo">Demo</a>
+          <a href="#status">Status</a>
+          <div class="theme-toggle" aria-label="Theme toggle">
+            <button type="button" data-theme-option="system" aria-pressed="true" aria-label="Use system theme" title="System theme">
+              <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+                <path d="M8 20h8"></path>
+                <path d="M12 16v4"></path>
+              </svg>
+            </button>
+            <button type="button" data-theme-option="light" aria-pressed="false" aria-label="Use light theme" title="Light theme">
+              <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v3"></path>
+                <path d="M12 19v3"></path>
+                <path d="M4.93 4.93l2.12 2.12"></path>
+                <path d="M16.95 16.95l2.12 2.12"></path>
+                <path d="M2 12h3"></path>
+                <path d="M19 12h3"></path>
+                <path d="M4.93 19.07l2.12-2.12"></path>
+                <path d="M16.95 7.05l2.12-2.12"></path>
+              </svg>
+            </button>
+            <button type="button" data-theme-option="dark" aria-pressed="false" aria-label="Use dark theme" title="Dark theme">
+              <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3c0 0 0 0 0 0A7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top" class="shell">
+      <section class="hero">
+        <div class="card hero-copy">
+          <span class="eyebrow">Parallel branch environments</span>
+          <h1>Every git worktree gets its own running stack.</h1>
+          <p>
+            StackMux turns parallel branches into isolated, testable environments with deterministic
+            ports, Docker orchestration, and per-worktree runtime config. Git gives you the branches.
+            StackMux gives you live environments you can actually use at the same time.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#demo">See the demo</a>
+            <a class="button secondary" href="#status">Current project status</a>
+          </div>
+          <div class="stat-grid">
+            <div class="stat">
+              <strong>Run branches side by side.</strong>
+              <span>Keep multiple features live at the same time.</span>
+            </div>
+            <div class="stat">
+              <strong>Test without merging.</strong>
+              <span>See exactly what each branch does before integration.</span>
+            </div>
+            <div class="stat">
+              <strong>Isolate every workstream.</strong>
+              <span>Give each developer or agent its own running environment.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="card hero-panel">
+          <h2>What it looks like</h2>
+          <div class="terminal">
+            <div><span class="prompt">$</span> stackmux start feat/auth</div>
+            <div class="comment">claim slot 1</div>
+            <div class="comment">create git worktree for feat/auth</div>
+            <div class="comment">render stack files and agent config</div>
+            <div class="comment">start services on isolated ports</div>
+            <br>
+            <div>Main: <code>localhost:3000</code></div>
+            <div>feat/auth: <code>localhost:3001</code></div>
+            <div>fix/bug: <code>localhost:3002</code></div>
+          </div>
+          <div class="slot-map" aria-label="StackMux slot map">
+            <div class="slot">
+              <span class="slot-label">Main</span>
+              <span class="slot-title">Base stack</span>
+              <span class="slot-port">localhost:3000</span>
+            </div>
+            <div class="slot">
+              <span class="slot-label">Slot 1</span>
+              <span class="slot-title">feat/auth</span>
+              <span class="slot-port">localhost:3001</span>
+            </div>
+            <div class="slot">
+              <span class="slot-label">Slot 2</span>
+              <span class="slot-title">fix/bug</span>
+              <span class="slot-port">localhost:3002</span>
+            </div>
+          </div>
+          <p style="margin-top: 16px;">
+            One command creates a new worktree, assigns a slot, and makes the branch live on its
+            own local URL.
+          </p>
+        </aside>
+      </section>
+
+      <section id="problem">
+        <div class="section-head">
+          <h2>The problem is not git. The problem is everything around it.</h2>
+          <p>
+            Git worktrees already solve parallel checkouts. The missing layer is the runtime:
+            ports, services, database separation, generated config, and a repeatable workflow for
+            humans and coding agents. StackMux fills that gap.
+          </p>
+        </div>
+      </section>
+
+      <section id="features">
+        <div class="section-head">
+          <h2>What StackMux adds</h2>
+          <p>
+            The current design centers on predictable slots, generated environment files, and
+            optional Docker service isolation that scales from small apps to multi-service repos.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <article class="card feature">
+            <h3>Deterministic ports</h3>
+            <p>
+              Base app on <code>:3000</code>, slot 1 on <code>:3001</code>, slot 2 on
+              <code>:3002</code>, and so on. The same pattern extends across every configured
+              service.
+            </p>
+          </article>
+          <article class="card feature">
+            <h3>Rendered stack files</h3>
+            <p>
+              Templates generate Compose overrides and per-worktree configuration with the right
+              paths, ports, and branch metadata already filled in.
+            </p>
+          </article>
+          <article class="card feature">
+            <h3>Monorepo stack selection</h3>
+            <p>
+              Named stacks let one workstream run the notes slice, another run tasks only, and a
+              third run the full platform without conflicts.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow">
+        <div class="section-head">
+          <h2>Expected workflow</h2>
+          <p>
+            This reflects the current reviewed README: claim a slot, create a worktree, render
+            stack config, and run branches side by side.
+          </p>
+        </div>
+        <div class="steps">
+          <article class="card step">
+            <span class="step-number">01</span>
+            <h3>Claim a slot</h3>
+            <p>
+              Each workstream gets a numbered slot that determines its port offsets and runtime
+              identity.
+            </p>
+          </article>
+          <article class="card step">
+            <span class="step-number">02</span>
+            <h3>Create the worktree</h3>
+            <p>
+              StackMux builds on git worktrees so each branch has its own directory and can run
+              independently.
+            </p>
+          </article>
+          <article class="card step">
+            <span class="step-number">03</span>
+            <h3>Render config</h3>
+            <p>
+              Templates generate per-worktree files for ports, Compose overrides, and agent
+              context.
+            </p>
+          </article>
+          <article class="card step">
+            <span class="step-number">04</span>
+            <h3>Run side by side</h3>
+            <p>
+              Multiple branches stay live at once, each on its own ports, without disturbing the
+              main checkout.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="demo">
+        <div class="section-head">
+          <h2>Quick start and demo</h2>
+          <p>
+            The current README now covers the full public flow, from trying the demo to installing
+            StackMux and starting real workstreams in your own project.
+          </p>
+        </div>
+        <div class="command-grid">
+          <article class="card command">
+            <h3>Try the demo</h3>
+            <p>
+              Start with the interactive demo to see slot allocation, service selection, and init
+              flow without touching an existing project.
+            </p>
+            <pre><code>git clone https://github.com/stackmux/stackmux.git
+cd stackmux
+./demo.sh
+./demo.sh 1</code></pre>
+          </article>
+          <article class="card command">
+            <h3>Real project flow</h3>
+            <p>
+              Install the CLI, initialize a project once, then create and run isolated workstreams
+              as needed.
+            </p>
+            <pre><code>stackmux init
+stackmux start feat/auth
+stackmux status
+stackmux finish feat/auth</code></pre>
+          </article>
+        </div>
+        <div class="card note">
+          <p>
+            The main README now includes the reviewed install, quick start, and command reference
+            material for the CLI at <code>github.com/stackmux/stackmux</code>.
+          </p>
+        </div>
+      </section>
+
+      <section id="status">
+        <div class="section-head">
+          <h2>Current status</h2>
+          <p>
+            This GitHub Pages repo is the public landing page. The StackMux source lives at
+            <code>github.com/stackmux/stackmux</code>, while active local development may happen in
+            a sibling worktree folder during in-progress work.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <article class="card feature">
+            <h3>Pages repo</h3>
+            <p>
+              <code>stackmux.github.io</code> can ship the public landing page immediately, without
+              depending on the main repo migration.
+            </p>
+          </article>
+          <article class="card feature">
+            <h3>Local development</h3>
+            <p>
+              Active implementation work may happen in a sibling worktree folder rather than in
+              this Pages repository.
+            </p>
+          </article>
+          <article class="card feature">
+            <h3>Source repository</h3>
+            <p>
+              The StackMux CLI source repository is <code>github.com/stackmux/stackmux</code>.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="shell">
+      StackMux: service orchestration for parallel git worktrees.
+    </footer>
+    <script>
+      (function() {
+        var storageKey = "stackmux-theme";
+        var root = document.documentElement;
+        var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-theme-option]"));
+
+        function getTheme() {
+          var theme = root.getAttribute("data-theme");
+          return theme === "light" || theme === "dark" || theme === "system" ? theme : "system";
+        }
+
+        function applyTheme(theme) {
+          root.setAttribute("data-theme", theme);
+          buttons.forEach(function(button) {
+            button.setAttribute("aria-pressed", button.getAttribute("data-theme-option") === theme ? "true" : "false");
+          });
+        }
+
+        buttons.forEach(function(button) {
+          button.addEventListener("click", function() {
+            var theme = button.getAttribute("data-theme-option");
+            applyTheme(theme);
+            try {
+              localStorage.setItem(storageKey, theme);
+            } catch (error) {
+              // Ignore storage failures and keep the in-memory selection.
+            }
+          });
+        });
+
+        applyTheme(getTheme());
+      })();
+    </script>
+  </body>
+</html>
