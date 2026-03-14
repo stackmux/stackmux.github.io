@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="mux-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(37,99,235,0.15)"/>
+      <stop offset="100%" stop-color="rgba(6,182,212,0.08)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-grad)"/>
+
+  <!-- Subtle glow -->
+  <ellipse cx="200" cy="100" rx="400" ry="300" fill="rgba(37,99,235,0.06)"/>
+  <ellipse cx="1000" cy="500" rx="350" ry="250" fill="rgba(6,182,212,0.05)"/>
+
+  <!-- Logo -->
+  <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="800" letter-spacing="-3">
+    <text x="100" y="240" font-size="96" fill="#f1f5f9">Stack</text>
+    <text x="355" y="240" font-size="96" fill="url(#mux-grad)">Mux</text>
+  </g>
+
+  <!-- Tagline -->
+  <text x="100" y="310" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="500" fill="#94a3b8">
+    Parallel development environments
+  </text>
+  <text x="100" y="355" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="500" fill="#94a3b8">
+    for humans and AI agents — so we can coexist.
+  </text>
+
+  <!-- Terminal preview -->
+  <rect x="100" y="400" width="1000" height="180" rx="12" fill="#1e293b" stroke="rgba(148,163,184,0.12)" stroke-width="1"/>
+
+  <!-- Terminal chrome dots -->
+  <circle cx="126" cy="424" r="6" fill="#ef4444"/>
+  <circle cx="146" cy="424" r="6" fill="#eab308"/>
+  <circle cx="166" cy="424" r="6" fill="#22c55e"/>
+
+  <!-- Terminal text -->
+  <g font-family="JetBrains Mono, monospace" font-size="18">
+    <text x="126" y="466" fill="#38bdf8">$</text>
+    <text x="146" y="466" fill="#f1f5f9">stackmux start</text>
+    <text x="366" y="466" fill="#a78bfa">feat/auth</text>
+
+    <text x="126" y="496" fill="#4ade80">&#x2713; Created branch feat/auth</text>
+    <text x="126" y="526" fill="#4ade80">&#x2713; Worktree checked out at ./api-feat-auth</text>
+    <text x="126" y="556" fill="#4ade80">&#x2713; Started services on :3001, :5001</text>
+  </g>
+
+  <!-- URL -->
+  <text x="1100" y="610" text-anchor="end" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600" fill="#64748b">stackmux.dev</text>
+</svg>
