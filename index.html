@@ -54,6 +54,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      /* Self-hosted fallback if Google Fonts fails to load */
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+        src: local('Inter'), url(fonts/inter-latin.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: 'JetBrains Mono';
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+        src: local('JetBrains Mono'), url(fonts/jetbrains-mono-latin.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+    </style>
     <script>
       (function() {
         var storageKey = "stackmux-theme";
@@ -88,8 +107,8 @@
         --shadow-lg: 0 4px 6px rgba(0,0,0,0.02), 0 16px 48px rgba(0, 0, 0, 0.08);
         --radius: 16px;
         --radius-lg: 24px;
-        --mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-        --sans: "Inter", -apple-system, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        --mono: "JetBrains Mono", "Cascadia Code", "Fira Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        --sans: "Inter", "SF Pro Display", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
 
       @media (prefers-color-scheme: dark) {
