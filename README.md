@@ -24,4 +24,4 @@ Then open `http://localhost:8000`.
 
 ## Content source
 
-The landing page content in [index.html](/home/jpasichnyk/projects/stackmux.github.io/index.html) is based on the current reviewed StackMux README in the main source repository.
+The landing page content in [index.html](index.html) is based on the current reviewed StackMux README in the main source repository.
