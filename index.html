@@ -1782,6 +1782,18 @@
             </div>
           </article>
         </div>
+        <div class="command-grid" style="margin-top: 16px;">
+          <article class="card command" style="grid-column: 1 / -1;">
+            <h3>Already using Cursor, Claude Code, or Codex?</h3>
+            <p>
+              Those tools are great at writing code &mdash; but when you run two or more of them
+              in parallel, they all assume they own the same ports, the same services, and the
+              same directories. StackMux is the layer underneath that gives each agent (or human)
+              its own isolated environment to build, run, and test against. Your AI coding tool
+              writes the code. StackMux makes sure there's a clean, isolated place to run it.
+            </p>
+          </article>
+        </div>
       </section>
 
       <section id="features">
@@ -1907,7 +1919,7 @@
               <tr>
                 <td>Claude / Codex / Cursor</td>
                 <td>AI-powered coding agents</td>
-                <td>No built-in environment isolation between agents</td>
+                <td>They write the code &mdash; but each agent still needs an isolated environment to run and test against</td>
               </tr>
               <tr>
                 <td>Playwright / Cypress</td>
