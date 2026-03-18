@@ -12,18 +12,18 @@
       gtag('js', new Date());
       gtag('config', 'G-B8TJZRMRWH');
     </script>
-    <title>StackMux - Parallel development environments for humans and AI agents</title>
+    <title>StackMux - Fully isolated parallel dev environments, zero conflicts</title>
     <meta
       name="description"
-      content="StackMux gives every branch its own isolated services, deterministic ports, and generated context. Run multiple workstreams in parallel — for developers and AI coding agents."
+      content="StackMux gives every workstream its own fully isolated environment — worktree, containers, ports, and config. Work on multiple versions of your app at the same time without conflicts. For developers and agentic AI workflows."
     >
-    <meta name="keywords" content="stackmux, git worktree, parallel development, AI agents, coding agents, Claude Code, Codex, Docker, service orchestration, developer tools, open source, CLI">
+    <meta name="keywords" content="stackmux, git worktree, parallel development, AI agents, agentic development, agentic coding, coding agents, Claude Code, Codex, Docker, service orchestration, developer tools, open source, CLI">
 
     <!-- Open Graph / Social -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://stackmux.dev">
-    <meta property="og:title" content="StackMux - Parallel development environments for humans and AI agents">
-    <meta property="og:description" content="Run multiple branches simultaneously with isolated services, deterministic ports, and generated AI agent context. Free and open source.">
+    <meta property="og:title" content="StackMux - Fully isolated parallel dev environments, zero conflicts">
+    <meta property="og:description" content="Every workstream gets its own isolated environment — worktree, containers, ports, config. No collisions, whether a human or an AI agent is driving. Free and open source.">
     <meta property="og:site_name" content="StackMux">
     <meta property="og:image" content="https://stackmux.dev/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -31,8 +31,8 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="StackMux - Parallel development environments">
-    <meta name="twitter:description" content="Every branch gets its own isolated services, ports, and AI agent context. Free, open source CLI tool.">
+    <meta name="twitter:title" content="StackMux - Fully isolated parallel dev environments">
+    <meta name="twitter:description" content="Every workstream gets its own isolated environment — ports, containers, config. No conflicts, whether a human or an AI agent is driving. Free and open source.">
     <meta name="twitter:image" content="https://stackmux.dev/og-image.png">
 
     <meta name="author" content="StackMux">
@@ -49,7 +49,7 @@
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Linux, macOS",
       "url": "https://stackmux.dev",
-      "description": "Parallel development environments for humans and AI agents. Isolated services, deterministic ports, and generated context for every branch.",
+      "description": "Fully isolated parallel dev environments. Every workstream gets its own worktree, containers, ports, and config — zero conflicts, whether a human or an AI agent is driving.",
       "license": "https://opensource.org/licenses/Apache-2.0",
       "isAccessibleForFree": true,
       "offers": {
@@ -1602,28 +1602,29 @@
       <section class="hero">
         <div class="card hero-copy">
           <span class="eyebrow"><span class="eyebrow-dot"></span>Coming soon — for humans and AI agents</span>
-          <h1>Run branches in parallel. For real.</h1>
+          <h1>Fully isolated parallel dev environments. Zero conflicts.</h1>
           <p class="hero-sub">
-            StackMux gives every branch its own isolated services, deterministic ports, and
-            generated AI agent context. Developers context-switch between features.
-            Coding agents work simultaneously without collisions.
-            Think <strong>tmux for your dev stack</strong>.
+            Every workstream gets its own worktree, services, ports, and config &mdash;
+            completely isolated from every other. Work on multiple versions of your app
+            at the same time without port conflicts, file collisions, or agents stomping
+            on each other. Built on <strong>git worktrees and Docker</strong> &mdash;
+            no magic, no lock-in.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#start">Coming soon</a>
           </div>
           <div class="stat-grid">
             <div class="stat">
-              <strong>AI-agent ready.</strong>
-              <span>Each agent gets its own environment to build, run, and test against.</span>
+              <strong>Total isolation.</strong>
+              <span>Every workstream gets its own ports, services, files, and config. Nothing shared, nothing collides.</span>
             </div>
             <div class="stat">
-              <strong>Review before merging.</strong>
-              <span>Browse, test, and verify each branch's live environment before integration.</span>
+              <strong>Humans and agents, side by side.</strong>
+              <span>Run 5 workstreams in parallel &mdash; whether a developer or an AI agent is driving each one.</span>
             </div>
             <div class="stat">
-              <strong>Zero collisions.</strong>
-              <span>Deterministic ports and isolated services across every branch.</span>
+              <strong>Git worktrees + Docker. That's it.</strong>
+              <span>You define your environment. StackMux makes sure every workstream gets an identical, isolated copy.</span>
             </div>
           </div>
         </div>
@@ -1643,11 +1644,11 @@
         <div class="card problem-card">
           <h2>The problem is not git. The problem is everything around it.</h2>
           <p>
-            Git worktrees already let you check out multiple branches at once. But each one
-            needs its own ports, its own database, its own Docker services, and its own config
-            files. Without that runtime layer, "parallel development" means constant collisions,
-            port conflicts, and agents that silently stomp on each other's work. StackMux is
-            that missing layer.
+            Git worktrees let you check out multiple branches at once &mdash; but that's just files.
+            Each branch still needs its own ports, its own database, its own Docker services, and its own
+            config. Without true runtime isolation, "parallel development" means port conflicts,
+            file collisions, and workstreams &mdash; human or AI &mdash; silently breaking each other.
+            StackMux gives every workstream a fully isolated environment so nothing collides, ever.
           </p>
         </div>
       </section>
@@ -1682,16 +1683,18 @@
             <span class="step-number">03</span>
             <h3>Start a workstream</h3>
             <p>
-              Run <code>stackmux start feat/auth</code>. StackMux creates an isolated
-              environment for your branch with its own ports, services, and config.
+              Run <code>stackmux start feat/auth</code>. StackMux creates a fully
+              isolated environment &mdash; its own worktree, containers, ports, and config &mdash;
+              completely walled off from every other workstream.
             </p>
           </article>
           <article class="card step">
             <span class="step-number">04</span>
             <h3>Develop and test</h3>
             <p>
-              Work on your branch. Run tests against your ports. Multiple branches
-              stay live at once &mdash; you or your agents work side by side.
+              Work on your branch. Run tests against your isolated ports. Multiple
+              branches stay live at once &mdash; humans and agents working side by side,
+              with nothing colliding.
             </p>
           </article>
           <article class="card step">
@@ -1715,11 +1718,13 @@
 
       <section id="agents">
         <div class="section-head">
-          <h2>Built for humans and AI agents.</h2>
+          <h2>Every workstream is fully isolated. No exceptions.</h2>
           <p>
-            Developers get isolated environments they can browse and test. AI agents get
-            the same, plus generated context files (for Claude Code, Codex, and others) that
-            tell each agent exactly where it is, what ports to use, and what not to touch.
+            Each workstream &mdash; whether driven by a developer or an agentic AI workflow &mdash; gets its own
+            worktree, its own containers, its own ports, and its own config. No port conflicts.
+            No file collisions. No "it works if you only run one at a time." Agents also get
+            generated context files (for Claude Code, Codex, and others) so they know exactly
+            what they own and what not to touch.
           </p>
         </div>
         <div class="command-grid">
@@ -1750,28 +1755,29 @@
 - See ARCHITECTURE.md for service map</code></pre>
           </article>
           <article class="card command">
-            <h3>Why this matters</h3>
+            <h3>Why isolation has to be explicit</h3>
             <p>
-              Without isolation, parallel workstreams — whether run by humans or
-              agents — assume they own the same ports and directories. Scale to
-              3 or 5 and it gets exponentially worse.
+              Without it, every parallel workstream &mdash; human or AI &mdash; assumes it owns
+              the same ports, the same directories, and the same services. Two workstreams
+              collide. Three is chaos. StackMux makes isolation the default, not something
+              you wire up yourself.
             </p>
             <div class="problem-box">
               <div class="label">Without StackMux</div>
               <ul>
                 <li>Port collisions crash each other's servers</li>
-                <li>Workstreams overwrite each other's files</li>
-                <li>Changes deploy over each other</li>
-                <li>Problems multiply with each parallel effort</li>
+                <li>Agents and humans overwrite each other's files</li>
+                <li>Shared services break when branches diverge</li>
+                <li>Every additional workstream makes it worse</li>
               </ul>
             </div>
             <div class="resolve-box">
               <div class="label">With StackMux</div>
               <ul class="resolve-list">
-                <li>Each workstream gets its own branch and worktree</li>
-                <li>Deterministic ports — no collisions</li>
-                <li>Generated context defines what each workstream owns</li>
-                <li>5 workstreams in parallel, zero conflicts</li>
+                <li>Each workstream is fully isolated &mdash; own worktree, containers, and ports</li>
+                <li>Deterministic port assignment &mdash; collisions are impossible</li>
+                <li>Generated context tells each workstream (and agent) exactly what it owns</li>
+                <li>Run, test, and develop multiple versions of your app at once &mdash; zero conflicts</li>
               </ul>
             </div>
           </article>
@@ -1780,7 +1786,7 @@
 
       <section id="features">
         <div class="section-head">
-          <h2>What StackMux adds</h2>
+          <h2>Built on git worktrees and Docker. Nothing weird.</h2>
           <div class="gives-grid">
             <div class="gives-item">
               <strong>Git worktrees</strong> for isolated checkouts.
@@ -1793,9 +1799,10 @@
             </div>
           </div>
           <p>
-            StackMux creates the worktrees, spins up the containers, assigns
-            deterministic ports, and generates the config. Each parallel workstream
-            gets its own fully isolated environment without you wiring anything together.
+            You define your environment &mdash; services, ports, config &mdash; and StackMux
+            makes sure every workstream gets an identical, isolated copy. It creates the
+            worktrees, spins up the containers, assigns deterministic ports, and generates
+            the config. No proprietary runtime. No reinventing the wheel.
           </p>
         </div>
         <div class="feature-grid">
@@ -1909,7 +1916,7 @@
               </tr>
               <tr>
                 <td>StackMux</td>
-                <td>Drives worktrees, services, ports, and agent context</td>
+                <td>Fully isolated environments — worktrees, services, ports, and agent context</td>
                 <td>Works with all of the above — the orchestration layer they're missing</td>
               </tr>
             </tbody>
@@ -1922,20 +1929,20 @@
           <h2>Free and open source.</h2>
           <p>
             StackMux will be Apache 2.0-licensed, free to use, with no telemetry or cloud
-            dependencies. Coming soon.
+            dependencies.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#start">Coming soon</a>
           </div>
           <div class="share-buttons">
             <span class="share-label">Share</span>
-            <a href="https://x.com/intent/tweet?url=https%3A%2F%2Fstackmux.dev&text=StackMux%20%E2%80%94%20parallel%20dev%20environments%20for%20humans%20and%20AI%20agents.%20Free%20and%20open%20source." target="_blank" rel="noopener" aria-label="Share on X">
+            <a href="https://x.com/intent/tweet?url=https%3A%2F%2Fstackmux.dev&text=StackMux%20%E2%80%94%20fully%20isolated%20parallel%20dev%20environments.%20No%20port%20conflicts%2C%20no%20collisions.%20For%20humans%20and%20AI%20agents.%20Free%20and%20open%20source." target="_blank" rel="noopener" aria-label="Share on X">
               <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </a>
-            <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fstackmux.dev&title=StackMux%20%E2%80%93%20Parallel%20dev%20environments%20for%20humans%20and%20AI%20agents" target="_blank" rel="noopener" aria-label="Share on Reddit">
+            <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fstackmux.dev&title=StackMux%20%E2%80%93%20Fully%20isolated%20parallel%20dev%20environments%20%E2%80%93%20zero%20conflicts%2C%20for%20humans%20and%20AI%20agents" target="_blank" rel="noopener" aria-label="Share on Reddit">
               <svg viewBox="0 0 24 24"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
             </a>
-            <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fstackmux.dev&t=StackMux%20%E2%80%93%20Parallel%20dev%20environments%20for%20humans%20and%20AI%20agents" target="_blank" rel="noopener" aria-label="Share on Hacker News">
+            <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fstackmux.dev&t=StackMux%20%E2%80%93%20Fully%20isolated%20parallel%20dev%20environments%20%E2%80%93%20zero%20conflicts%2C%20for%20humans%20and%20AI%20agents" target="_blank" rel="noopener" aria-label="Share on Hacker News">
               <svg viewBox="0 0 24 24"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
             </a>
             <button onclick="(function(){var url='https://stackmux.dev';function show(){var t=document.getElementById('copied-tip');t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1500)}if(navigator.clipboard){navigator.clipboard.writeText(url).then(show)}else{var a=document.createElement('textarea');a.value=url;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);show()}})()" aria-label="Copy link">
