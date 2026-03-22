@@ -1722,9 +1722,9 @@
           <p>
             Each workstream &mdash; whether driven by a developer or an agentic AI workflow &mdash; gets its own
             worktree, its own containers, its own ports, and its own config. No port conflicts.
-            No file collisions. No "it works if you only run one at a time." Agents also get
-            generated context files (for Claude Code, Codex, and others) so they know exactly
-            what they own and what not to touch.
+            No file collisions. No "it works if you only run one at a time." Agents get
+            generated context files so they know exactly what they own, what not to touch,
+            and how to coordinate with other agents working in parallel.
           </p>
         </div>
         <div class="command-grid">
@@ -1732,8 +1732,10 @@
             <h3>Generated workstream context</h3>
             <p>
               Every workstream gets a human-readable context file with its ports, paths,
-              and rules. You can scan it at a glance; AI agents (Claude Code, Codex, and
-              others) read it automatically.
+              rules, and operational commands &mdash; agents know how to verify the stack,
+              rebuild services, and access GitHub with scoped credentials. You can scan it
+              at a glance; AI agents read it automatically. Customize what agents see
+              per-project with template overrides.
             </p>
             <pre class="context-file"><code><span class="ctx-h1"># Workstream: feat-auth (api)</span>
 
@@ -1783,14 +1785,35 @@
           </article>
         </div>
         <div class="command-grid" style="margin-top: 16px;">
+          <article class="card command">
+            <h3>Three operating modes</h3>
+            <p>
+              Not every task needs full autonomy. StackMux lets you configure how much control
+              agents get: <strong>full</strong> mode for end-to-end implementation and PR creation,
+              <strong>read-only</strong> for analysis and planning without file modifications, or
+              <strong>coordinator</strong> to orchestrate multiple agents &mdash; creating workstreams,
+              monitoring progress, and delegating implementation without writing code itself.
+            </p>
+          </article>
+          <article class="card command">
+            <h3>Agents coordinate, not just isolate</h3>
+            <p>
+              Each workstream includes a structured status file that agents maintain as they work &mdash;
+              current phase, progress, blockers, and key decisions. Coordinator agents and sibling
+              workstreams read each other's status to understand progress and avoid duplicating work.
+              Isolation prevents collisions; status tracking enables collaboration.
+            </p>
+          </article>
           <article class="card command" style="grid-column: 1 / -1;">
-            <h3>Already using Cursor, Claude Code, or Codex?</h3>
+            <h3>Already using Claude Code, Cursor, Windsurf, or GitHub Copilot?</h3>
             <p>
               Those tools are great at writing code &mdash; but when you run two or more of them
               in parallel, they all assume they own the same ports, the same services, and the
               same directories. StackMux is the layer underneath that gives each agent (or human)
               its own isolated environment to build, run, and test against. Your AI coding tool
               writes the code. StackMux makes sure there's a clean, isolated place to run it.
+              Run <code>stackmux init</code> and it auto-detects and integrates with your existing
+              agent config files &mdash; zero wiring required.
             </p>
           </article>
         </div>
