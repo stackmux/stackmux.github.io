@@ -1,0 +1,6 @@
+{
+  "rules": {
+    "no-inline-style": "off",
+    "prefer-tbody": "off"
+  }
+}
