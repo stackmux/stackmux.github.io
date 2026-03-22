@@ -1,0 +1,17 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate HTML
+        run: npx --yes html-validate@latest index.html
+
+      - name: Check formatting
+        run: npx --yes prettier@latest --check index.html
