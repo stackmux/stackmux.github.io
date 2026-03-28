@@ -1825,7 +1825,8 @@
               <strong>Git worktrees + Docker. That's it.</strong>
               <span
                 >You define your environment. StackMux makes sure every
-                workstream gets an identical, isolated copy.</span
+                workstream gets an identical, isolated copy. Zero footprint in
+                your repo by default.</span
               >
             </div>
           </div>
@@ -1902,8 +1903,9 @@
             </h3>
             <p>
               Run <code>stackmux init</code> in any git checkout. Configures
-              your services, ports, and templates. Committed to the repo so the
-              whole team shares it.
+              your services, ports, and templates &mdash; stored outside the
+              repo with zero git footprint. Share config with the team later
+              when you're ready.
             </p>
           </article>
         </div>
@@ -1932,8 +1934,8 @@
             <h3>Finish up</h3>
             <p>
               Run <code>stackmux finish feat/auth</code> to stop services,
-              remove the worktree, and free resources. Start another workstream
-              whenever you need one.
+              remove the worktree, and free resources. Or stop to pause the
+              workstream and resume it later.
             </p>
           </article>
           <article class="card step">
@@ -1968,8 +1970,9 @@
               ports, paths, rules, and operational commands &mdash; agents know
               how to verify the stack, rebuild services, and access GitHub with
               scoped credentials. You can scan it at a glance; AI agents read it
-              automatically. Customize what agents see per-project with template
-              overrides.
+              automatically. StackMux auto-detects your AI tools and teaches
+              them how to work with it. Customize what agents see per-project
+              with template overrides.
             </p>
             <pre
               class="context-file"
@@ -2068,8 +2071,8 @@
               isolated environment to build, run, and test against. Your AI
               coding tool writes the code. StackMux makes sure there's a clean,
               isolated place to run it. Run <code>stackmux init</code> and it
-              auto-detects and integrates with your existing agent config files
-              &mdash; zero wiring required.
+              auto-detects your existing tools and teaches agents how to
+              work with it &mdash; zero wiring required.
             </p>
           </article>
         </div>
@@ -2092,9 +2095,10 @@
           <p>
             You define your environment &mdash; services, ports, config &mdash;
             and StackMux makes sure every workstream gets an identical, isolated
-            copy. It creates the worktrees, spins up the containers, assigns
-            deterministic ports, and generates the config. No proprietary
-            runtime. No reinventing the wheel.
+            copy. It creates the worktrees, manages the containers, assigns
+            deterministic ports, and generates the config. Run services from any
+            worktree with automatic port isolation. No proprietary runtime. No
+            reinventing the wheel.
           </p>
         </div>
         <div class="feature-grid">
@@ -2146,7 +2150,7 @@
               <td><code>stackmux init</code></td>
               <td>
                 Configure your project
-                <span class="ctx-hint">(once per repo)</span>
+                <span class="ctx-hint">(once per repo, zero git footprint)</span>
               </td>
             </tr>
             <tr>
@@ -2156,6 +2160,10 @@
             <tr>
               <td><code>stackmux status</code></td>
               <td>See what's running</td>
+            </tr>
+            <tr>
+              <td><code>stackmux stop &lt;branch&gt;</code></td>
+              <td>Pause and resume later</td>
             </tr>
             <tr>
               <td><code>stackmux finish &lt;branch&gt;</code></td>
