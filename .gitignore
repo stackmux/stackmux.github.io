@@ -1,0 +1,6 @@
+
+# StackMux — generated per-slot files (machine-specific)
+STACKMUX.workstream.md
+STACKMUX_STATUS.md
+.stackmux/instance-id
+.stackmux/state-dir
