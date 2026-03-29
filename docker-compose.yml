@@ -4,10 +4,5 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./index.html:/usr/share/nginx/html/index.html:ro
-      - ./favicon.svg:/usr/share/nginx/html/favicon.svg:ro
-      - ./og-image.png:/usr/share/nginx/html/og-image.png:ro
-      - ./og-image.svg:/usr/share/nginx/html/og-image.svg:ro
-      - ./robots.txt:/usr/share/nginx/html/robots.txt:ro
-      - ./sitemap.xml:/usr/share/nginx/html/sitemap.xml:ro
-      - ./fonts:/usr/share/nginx/html/fonts:ro
+      - .:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
