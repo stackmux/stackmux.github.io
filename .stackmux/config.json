@@ -1,0 +1,22 @@
+{
+  "schema_version": 5,
+  "project": "stackmux.github.io",
+  "agent_mode": "full",
+  "max_slots": 5,
+  "ports": {
+    "web": 8000
+  },
+  "internal_ports": {
+    "web": 80
+  },
+  "colors": [
+    "#8B5CF6",
+    "#F59E0B",
+    "#10B981",
+    "#EF4444",
+    "#3B82F6"
+  ],
+  "templates": {
+    "agent_md": "templates/STACKMUX.workstream.md.template"
+  }
+}
