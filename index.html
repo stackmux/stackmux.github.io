@@ -156,6 +156,7 @@
         --line: rgba(0, 0, 0, 0.07);
         --accent: #2563eb;
         --accent-2: #0f766e;
+        --danger: #dc2626;
         --accent-3: #06b6d4;
         --terminal-bg: #3d4f63;
         --shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 6px 24px rgba(0, 0, 0, 0.06);
@@ -182,6 +183,7 @@
           --line: rgba(148, 163, 184, 0.12);
           --accent: #60a5fa;
           --accent-2: #5eead4;
+          --danger: #f87171;
           --accent-3: #22d3ee;
           --terminal-bg: #0f172a;
           --shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -200,6 +202,7 @@
         --line: rgba(0, 0, 0, 0.07);
         --accent: #2563eb;
         --accent-2: #0f766e;
+        --danger: #dc2626;
         --accent-3: #06b6d4;
         --terminal-bg: #3d4f63;
         --shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 6px 24px rgba(0, 0, 0, 0.06);
@@ -217,6 +220,7 @@
         --line: rgba(148, 163, 184, 0.12);
         --accent: #60a5fa;
         --accent-2: #5eead4;
+        --danger: #f87171;
         --accent-3: #22d3ee;
         --terminal-bg: #0f172a;
         --shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -946,6 +950,114 @@
         border-bottom: 0;
       }
 
+      .signup-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      /* display:flex above outranks the UA stylesheet's [hidden]{display:none},
+         so the form must opt back in or it stays visible after a success. */
+      .signup-form[hidden] {
+        display: none;
+      }
+
+      .signup-field {
+        flex: 1 1 260px;
+        min-width: 0;
+      }
+
+      .signup-input {
+        width: 100%;
+        min-height: 48px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel-strong);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition:
+          border-color 150ms,
+          box-shadow 150ms;
+      }
+
+      .signup-input::placeholder {
+        color: var(--muted);
+      }
+
+      .signup-input:focus-visible {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+      }
+
+      .signup-form .button[disabled] {
+        opacity: 0.6;
+        cursor: default;
+        transform: none;
+      }
+
+      .signup-check {
+        display: flex;
+        flex: 1 1 100%;
+        align-items: flex-start;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+
+      .signup-check input {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+        margin: 2px 0 0;
+        accent-color: var(--accent);
+      }
+
+      .signup-note {
+        flex: 1 1 100%;
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .signup-sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .signup-status {
+        margin: 14px 0 0;
+        font-size: 0.92rem;
+        font-weight: 600;
+      }
+
+      .signup-status:empty {
+        display: none;
+      }
+
+      .signup-status[data-state="pending"] {
+        color: var(--muted);
+      }
+
+      .signup-status[data-state="success"] {
+        color: var(--accent-2);
+      }
+
+      .signup-status[data-state="error"] {
+        color: var(--danger);
+      }
+
       .gives-grid {
         display: flex;
         gap: 16px;
@@ -1568,6 +1680,11 @@
           border-radius: 10px;
         }
 
+        .signup-field,
+        .signup-form .button {
+          flex: 1 1 100%;
+        }
+
         .workflow-table td:first-child {
           white-space: normal;
         }
@@ -1698,7 +1815,7 @@
           <a href="#agents">Isolation</a>
           <a href="#features">Features</a>
           <a href="#compare">Compare</a>
-          <a href="#start">Coming soon</a>
+          <a href="#start">Early access</a>
         </nav>
         <div class="theme-toggle" role="group" aria-label="Theme toggle">
           <button
@@ -1804,7 +1921,7 @@
             lock-in.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#start">Coming soon</a>
+            <a class="button primary" href="#start">Get early access</a>
           </div>
           <div class="stat-grid">
             <div class="stat">
@@ -2155,6 +2272,60 @@
         </div>
         <div class="card note">
           <p style="margin-bottom: 14px">
+            <strong>Want it sooner?</strong> Leave your email and you'll get one
+            message when v1 ships — nothing else. Tick the box if you'd rather
+            have it before then.
+          </p>
+          <form
+            id="signup-form"
+            class="signup-form"
+            action="https://buttondown.com/api/emails/embed-subscribe/stackmux"
+            method="post"
+          >
+            <div class="signup-field">
+              <label class="signup-sr" for="signup-email">Email address</label>
+              <input
+                id="signup-email"
+                class="signup-input"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+            <button class="button primary" type="submit">Keep me posted</button>
+            <label class="signup-check" for="signup-beta">
+              <input
+                id="signup-beta"
+                type="checkbox"
+                name="metadata__beta"
+                value="yes"
+              />
+              <span
+                >I'll help beta test — happy to run it against a real repo and
+                send feedback.</span
+              >
+            </label>
+            <div class="signup-sr" aria-hidden="true">
+              <label for="signup-website">Leave this field empty</label>
+              <input
+                id="signup-website"
+                type="text"
+                name="website"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
+            <p class="signup-note">
+              One email when v1 ships. No spam, no sharing, unsubscribe anytime.
+            </p>
+          </form>
+          <p id="signup-status" class="signup-status" role="status"></p>
+          <!-- When the repo is public, Star / Watch-for-releases buttons go here. -->
+        </div>
+        <div class="card note">
+          <p style="margin-bottom: 14px">
             Once released, the workflow will be:
           </p>
           <table class="workflow-table">
@@ -2261,7 +2432,7 @@
             or cloud dependencies.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#start">Coming soon</a>
+            <a class="button primary" href="#start">Get early access</a>
           </div>
           <div class="share-buttons">
             <span class="share-label">Share</span>
@@ -2714,6 +2885,100 @@
             toggle.setAttribute("aria-expanded", "false");
           });
         }
+      })();
+
+      // --- Beta signup form ---
+      (function () {
+        var form = document.getElementById("signup-form");
+        var status = document.getElementById("signup-status");
+        if (!form || !status) return;
+
+        var button = form.querySelector('button[type="submit"]');
+        var honeypot = form.elements["website"];
+
+        // Browsers restore form values on reload and on back/forward, and
+        // autofill happily fills fields it cannot see. Either would leave the
+        // honeypot pre-filled for a real person, silently blackholing their
+        // signup while telling them it worked. Clear it at both moments.
+        function clearHoneypot() {
+          honeypot.value = "";
+        }
+
+        clearHoneypot();
+        window.addEventListener("pageshow", clearHoneypot);
+
+        function setStatus(state, message) {
+          status.setAttribute("data-state", state);
+          status.textContent = message;
+        }
+
+        function track(name, ok) {
+          if (typeof window.gtag !== "function") return;
+          window.gtag("event", name, {
+            beta_tester: form.elements["metadata__beta"].checked,
+            outcome: ok,
+          });
+        }
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          // Honeypot: only a bot fills a field it cannot see. Fail silently so
+          // it gets no feedback to adapt to.
+          if (honeypot.value) {
+            form.hidden = true;
+            setStatus("success", "Thanks \u2014 you're on the list.");
+            return;
+          }
+
+          // Fired on every genuine attempt, not just successes. Comparing this
+          // count against Buttondown's subscriber count is what surfaces a
+          // silently broken integration.
+          track("signup_submit", "attempt");
+
+          var body = new URLSearchParams();
+          body.set("email", form.elements["email"].value);
+          if (form.elements["metadata__beta"].checked) {
+            body.set("metadata__beta", "yes");
+          }
+
+          button.disabled = true;
+          setStatus("pending", "Signing you up\u2026");
+
+          fetch(form.action, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: body.toString(),
+          })
+            .then(function (response) {
+              if (!response.ok) {
+                // Buttondown answers some submissions with a Cloudflare
+                // Turnstile challenge: HTTP 400 plus an HTML page. fetch()
+                // cannot render that, and only the visitor can complete it, so
+                // hand off to a native post that navigates them to the page.
+                // form.submit() does not re-enter this handler.
+                track("signup_submit", "challenged");
+                setStatus("pending", "One quick verification step\u2026");
+                honeypot.disabled = true;
+                form.submit();
+                return;
+              }
+              form.hidden = true;
+              setStatus(
+                "success",
+                "You're on the list \u2014 check your inbox to confirm.",
+              );
+              track("signup_submit", "success");
+            })
+            .catch(function () {
+              button.disabled = false;
+              setStatus(
+                "error",
+                "That didn't go through. Please try again in a moment.",
+              );
+              track("signup_submit", "error");
+            });
+        });
       })();
 
       // --- Scroll spy for nav ---
