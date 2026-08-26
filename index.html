@@ -2951,7 +2951,18 @@
             body: body.toString(),
           })
             .then(function (response) {
-              if (!response.ok) throw new Error("HTTP " + response.status);
+              if (!response.ok) {
+                // Buttondown answers some submissions with a Cloudflare
+                // Turnstile challenge: HTTP 400 plus an HTML page. fetch()
+                // cannot render that, and only the visitor can complete it, so
+                // hand off to a native post that navigates them to the page.
+                // form.submit() does not re-enter this handler.
+                track("signup_submit", "challenged");
+                setStatus("pending", "One quick verification step\u2026");
+                honeypot.disabled = true;
+                form.submit();
+                return;
+              }
               form.hidden = true;
               setStatus(
                 "success",
